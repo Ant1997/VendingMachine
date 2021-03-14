@@ -1,5 +1,7 @@
 $(document).ready(function () {
     addedMoney = 0;
+    newMoney = 0;
+    updateMoney(addedMoney);
     selectedItemId = null;
 
     loadItems();
@@ -25,7 +27,7 @@ $(document).ready(function () {
         });
 
     purchaseClicked();
-
+    changeReturnClicked();
 });
 
 
@@ -116,6 +118,7 @@ function setId(id){
     messageBox("Item ID " + selectedItemId + " selected");
     $('#itemChosen').empty();
     $('#itemChosen').val(selectedItemId);
+    changeBox("");
 }
 
 function purchaseClicked(){
@@ -141,33 +144,41 @@ function purchaseClicked(){
                        var changeText = "";
 
                        if (quarters > 0){
-                            changeText += quarters + " Quarter ";
+                            changeText += quarters + " Quarters";
                             money += quarters * 0.25;
+                            if(dimes > 0 || nickels > 0 || pennies > 0){
+                                changeText += ", ";
+                            }
                        }
                        if (dimes > 0){
-                            changeText += dimes + " Dime ";
+                            changeText += dimes + " Dimes ";
                             money += dimes * 0.10;
+                            if(nickels > 0 || pennies > 0){
+                                changeText += ", ";
+                            }
                        }
                        if (nickels > 0){
-                            changeText += nickels + " Nickel ";
+                            changeText += nickels + " Nickels ";
                             money += nickels * 0.05;
+                            if(pennies > 0){
+                                changeText += ", ";
+                            }
                        }
                        if (pennies > 0){
-                            changeText += pennies + " Penny ";
+                            changeText += pennies + " Pennies ";
                             money += pennies * 0.01;
                        }
                        changeBox(changeText);
 
-                       addedMoney = money;
+                       newMoney = money;
                        money = parseFloat(money);
-                       alert(money);
-                       updateMoney(money);
+
+                       //updateMoney(money);
                        loadItems();
                        messageBox("Thank you!!");
                        selectedItemId = null;
                        $('#itemChosen').empty();
-                       //loadItems();
-                       //subtract deposited money
+
 
                     },
                     error: function(xhr, status, error) {
@@ -178,28 +189,10 @@ function purchaseClicked(){
     });
 }
 
-function checkAndDisplayValidationErrors(input) {
-    clearErrorMessage();
 
-    var errorMessages = [];
-
-    input.each(function() {
-        if (!this.validity.valid) {
-            var errorField = $('label[for=' + this.id + ']').text();
-            errorMessages.push(errorField + ' ' + this.validationMessage);
-        }
+function changeReturnClicked(){
+    $('#changeReturnButton').on('click', function () {
+        updateMoney(newMoney);
+        addedMoney = newMoney;
     });
-
-    if (errorMessages.length > 0){
-        $.each(errorMessages,function(index,message) {
-            $('#errorMessages').append($('<li>').attr({class: 'list-group-item list-group-item-danger'}).text(message));
-            $('#errorMessagesAdd').append($('<li>').attr({class: 'list-group-item list-group-item-danger'}).text(message));
-            $('#errorMessagesEdit').append($('<li>').attr({class: 'list-group-item list-group-item-danger'}).text(message));
-        });
-        // return true, indicating that there were errors
-        return true;
-    } else {
-        // return false, indicating that there were no errors
-        return false;
-    }
 }
