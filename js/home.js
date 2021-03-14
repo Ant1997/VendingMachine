@@ -1,3 +1,8 @@
+//Anthony-Tien Nhat Huynh
+
+/**
+* Function that run everything when html document is ready
+*/
 $(document).ready(function () {
     addedMoney = 0;
     newMoney = 0;
@@ -32,6 +37,10 @@ $(document).ready(function () {
 
 });
 
+/**
+* Function that is used for messageBox effect. Change the color of the messageBox's background to blue
+like the buttons for a split second then goes back to white.
+*/
 var flash = function(elements) {
 var opacity = 100;
 var color = "23, 162, 184" // has to be in this format since we use rgba
@@ -42,6 +51,10 @@ var interval = setInterval(function() {
   }, 1)
 };
 
+/**
+* Function that update the moneyInput element.
+* @param    {decimal} money    The value of money
+*/
 function updateMoney(money) {
     money = parseFloat(money);
     $('#moneyInput').empty();
@@ -49,35 +62,61 @@ function updateMoney(money) {
     //addedMoney = $('#moneyInput').val();
 }
 
+/**
+* Function that update the messageOutput.
+* @param    {String} messageResponse    The message that is to be displayed
+*/
 function messageBox(messageResponse) {
     $('#messageOutput').empty();
     $('#messageOutput').val(messageResponse);
 
     //$('#messageOutput').fadeOut(5).fadeIn(5).fadeOut(5).fadeIn(5);
+
+    //calls flash function to have an effect.
     flash($('#messageOutput'))
 }
 
+/**
+* Function that update the changeOutput's text.
+* @param    {String} change    The value of money in Quarters, Dimes, Nickels, and Pennies
+*/
 function changeBox(change) {
     $('#changeOutput').empty();
     $('#changeOutput').val(change);
 }
 
+
+/**
+* Function that clears all of the output elements that is on the right.
+*/
 function clearOutput(){
     $('#changeOutput').val("");
     $('#messageOutput').val("");
     $('#itemChosen').val("");
 }
 
+/**
+* Function that display decimals to fixed decimal point like money. Also prepend $ to indicate it is USD.
+* @param    {Decimal} amount    The decimal that needs to be converted to currency
+*/
 const formatToCurrency = amount => {
   return "$" + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
 };
 
+
+/**
+* Function that wipe the left side of the html document clean and prepares the grid for updated cards.
+*/
 function clearItemsTable() {
     $('#gridContentCol1').empty();
     $('#gridContentCol2').empty();
     $('#gridContentCol3').empty();
 }
 
+/**
+* Function uses the GET API to retrieve all items. It then displays it in a grid and in cards.
+Each cards has a click-on function which updates the output text boxes.
+*/
 function loadItems() {
     clearItemsTable();
     var grid1 = $('#gridContentCol1');
@@ -126,6 +165,10 @@ function loadItems() {
     });
 }
 
+/**
+* Function that is solely used when a card/item is clicked. It updates the output boxes.
+* @param    {int} id Takes in the item's id and displays it in itemChosen and messageBox/messageOutput element.
+*/
 function setId(id){
     selectedItemId = id;
     //alert(selectedItemId);
@@ -135,6 +178,10 @@ function setId(id){
     changeBox("");
 }
 
+/**
+* Function that allows user to POST and purchase items.
+It displays in the output boxes accordingly and provide error messages if necessary.
+*/
 function purchaseClicked(){
     $('#purchaseButton').on('click', function () {
 
@@ -203,7 +250,9 @@ function purchaseClicked(){
     });
 }
 
-
+/**
+* Function that update the Total $ In box and clears output.
+*/
 function changeReturnClicked(){
     $('#changeReturnButton').on('click', function () {
         updateMoney(newMoney);
