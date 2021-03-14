@@ -22,14 +22,25 @@ $(document).ready(function () {
         });
         $('#addNickel').on('click', function () {
             addedMoney += 0.050;
-            messageBox("You added a $0.05")
+            messageBox("You added $0.05")
             updateMoney(addedMoney);
         });
 
     purchaseClicked();
     changeReturnClicked();
+
+
 });
 
+var flash = function(elements) {
+var opacity = 100;
+var color = "23, 162, 184" // has to be in this format since we use rgba
+var interval = setInterval(function() {
+    opacity -= 3;
+    if (opacity <= 0) clearInterval(interval);
+    $(elements).css({background: "rgba("+color+", "+opacity/100+")"});
+  }, 1)
+};
 
 function updateMoney(money) {
     money = parseFloat(money);
@@ -41,6 +52,9 @@ function updateMoney(money) {
 function messageBox(messageResponse) {
     $('#messageOutput').empty();
     $('#messageOutput').val(messageResponse);
+
+    //$('#messageOutput').fadeOut(5).fadeIn(5).fadeOut(5).fadeIn(5);
+    flash($('#messageOutput'))
 }
 
 function changeBox(change) {
@@ -48,10 +62,10 @@ function changeBox(change) {
     $('#changeOutput').val(change);
 }
 
-function clearErrorMessage(){
-    $('#errorMessages').empty();
-    $('#errorMessagesEdit').empty();
-    $('#errorMessagesAdd').empty();
+function clearOutput(){
+    $('#changeOutput').val("");
+    $('#messageOutput').val("");
+    $('#itemChosen').val("");
 }
 
 const formatToCurrency = amount => {
@@ -194,5 +208,6 @@ function changeReturnClicked(){
     $('#changeReturnButton').on('click', function () {
         updateMoney(newMoney);
         addedMoney = newMoney;
+        clearOutput();
     });
 }
