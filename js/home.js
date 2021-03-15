@@ -21,25 +21,25 @@ $(document).ready(function () {
             addedMoney += 1.000;
             messageBox("You added $1.00");
             updateMoney(addedMoney);
-            ('#changeOutput').val("");
+            $('#changeOutput').val("");
         });
         $('#addQuarter').on('click', function () {
             addedMoney += 0.250;
             messageBox("You added $0.25")
             updateMoney(addedMoney);
-            ('#changeOutput').val("");
+            $('#changeOutput').val("");
         });
         $('#addDime').on('click', function () {
             addedMoney += 0.100;
             messageBox("You added $0.10");
             updateMoney(addedMoney);
-            ('#changeOutput').val("");
+            $('#changeOutput').val("");
         });
         $('#addNickel').on('click', function () {
             addedMoney += 0.050;
             messageBox("You added $0.05")
             updateMoney(addedMoney);
-            ('#changeOutput').val("");
+            $('#changeOutput').val("");
         });
 
     purchaseClicked();
@@ -240,7 +240,7 @@ function purchaseClicked(){
                             changeText += pennies + " Pennies ";
                             money += pennies * 0.01;
                        }
-                       //changeBox(changeText);
+                       changeBox(changeText);
 
                        newMoney = money;
                        money = parseFloat(money);
