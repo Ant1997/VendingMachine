@@ -6,29 +6,40 @@
 $(document).ready(function () {
     addedMoney = 0;
     newMoney = 0;
+
+    quarters = 0;
+    dimes = 0;
+    nickels = 0;
+    pennies = 0;
+    changeText = "";
+
     updateMoney(addedMoney);
     selectedItemId = null;
 
     loadItems();
-    $('#addDollar').on('click', function () {
+        $('#addDollar').on('click', function () {
             addedMoney += 1.000;
             messageBox("You added $1.00");
             updateMoney(addedMoney);
+            ('#changeOutput').val("");
         });
         $('#addQuarter').on('click', function () {
             addedMoney += 0.250;
             messageBox("You added $0.25")
             updateMoney(addedMoney);
+            ('#changeOutput').val("");
         });
         $('#addDime').on('click', function () {
             addedMoney += 0.100;
             messageBox("You added $0.10");
             updateMoney(addedMoney);
+            ('#changeOutput').val("");
         });
         $('#addNickel').on('click', function () {
             addedMoney += 0.050;
             messageBox("You added $0.05")
             updateMoney(addedMoney);
+            ('#changeOutput').val("");
         });
 
     purchaseClicked();
@@ -90,7 +101,7 @@ function changeBox(change) {
 * Function that clears all of the output elements that is on the right.
 */
 function clearOutput(){
-    $('#changeOutput').val("");
+    //$('#changeOutput').val("");
     $('#messageOutput').val("");
     $('#itemChosen').val("");
 }
@@ -196,13 +207,13 @@ function purchaseClicked(){
                     url: 'http://tsg-vending.herokuapp.com/money/'+ addedMoney.toFixed(2) +'/item/' + selectedItemId,
                     success: function(item) {
 
-                       var quarters = item['quarters'];
-                       var dimes = item['dimes'];
-                       var nickels = item['nickels'];
-                       var pennies = item['pennies'];
+                       quarters = item['quarters'];
+                       dimes = item['dimes'];
+                       nickels = item['nickels'];
+                       pennies = item['pennies'];
                        var money = parseFloat(0);
 
-                       var changeText = "";
+                       changeText = "";
 
                        if (quarters > 0){
                             changeText += quarters + " Quarters";
@@ -229,12 +240,13 @@ function purchaseClicked(){
                             changeText += pennies + " Pennies ";
                             money += pennies * 0.01;
                        }
-                       changeBox(changeText);
+                       //changeBox(changeText);
 
                        newMoney = money;
                        money = parseFloat(money);
+                       addedMoney = money;
 
-                       //updateMoney(money);
+                       updateMoney(money);
                        loadItems();
                        messageBox("Thank you!!");
                        selectedItemId = null;
@@ -250,13 +262,56 @@ function purchaseClicked(){
     });
 }
 
+const generateCoinChange = cents => {
+    money = addedMoney;
+    money = money * 100;
+    quarters = Math.floor(money/25);
+    money -= 25*quarters
+    dimes = Math.floor(money/10);
+    money -= 10*dimes
+    nickels = Math.floor(money/5);
+    money -= 5*nickels
+    pennies = Math.floor(money/1);
+};
+
 /**
 * Function that update the Total $ In box and clears output.
 */
 function changeReturnClicked(){
     $('#changeReturnButton').on('click', function () {
-        updateMoney(newMoney);
-        addedMoney = newMoney;
+        //updateMoney(newMoney);
+        //addedMoney = newMoney;
+       generateCoinChange();
+       changeText = '';
+       if (quarters > 0){
+         changeText += quarters + " Quarters";
+         money += quarters * 0.25;
+         if(dimes > 0 || nickels > 0 || pennies > 0){
+            changeText += ", ";
+         }
+       }
+       if (dimes > 0){
+         changeText += dimes + " Dimes ";
+         money += dimes * 0.10;
+         if(nickels > 0 || pennies > 0){
+            changeText += ", ";
+         }
+       }
+       if (nickels > 0){
+         changeText += nickels + " Nickels ";
+         money += nickels * 0.05;
+         if(pennies > 0){
+           changeText += ", ";
+         }
+       }
+       if (pennies > 0){
+         changeText += pennies + " Pennies ";
+         money += pennies * 0.01;
+       }
+
+        changeBox(changeText);
+        addedMoney = 0.00;
+        updateMoney(addedMoney);
         clearOutput();
     });
 }
